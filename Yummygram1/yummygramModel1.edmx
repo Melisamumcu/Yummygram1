@@ -1,0 +1,501 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="YummygramDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Degerlendirmeler">
+          <Key>
+            <PropertyRef Name="DegerlendirmeID" />
+          </Key>
+          <Property Name="DegerlendirmeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="GonderiID" Type="int" Nullable="false" />
+          <Property Name="KullaniciID" Type="int" Nullable="false" />
+          <Property Name="YildizSayisi" Type="int" Nullable="false" />
+          <Property Name="DegerlendirmeTarihi" Type="datetime" />
+        </EntityType>
+        <EntityType Name="GonderiHashtagleri">
+          <Key>
+            <PropertyRef Name="GonderiID" />
+            <PropertyRef Name="HashtagID" />
+          </Key>
+          <Property Name="GonderiID" Type="int" Nullable="false" />
+          <Property Name="HashtagID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Gonderiler">
+          <Key>
+            <PropertyRef Name="GonderiID" />
+          </Key>
+          <Property Name="GonderiID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="KullaniciID" Type="int" Nullable="false" />
+          <Property Name="KategoriID" Type="int" />
+          <Property Name="Baslik" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Tarif" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="FotografYolu" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="PaylasimTarihi" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Hashtagler">
+          <Key>
+            <PropertyRef Name="HashtagID" />
+          </Key>
+          <Property Name="HashtagID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EtiketAdi" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Kategoriler">
+          <Key>
+            <PropertyRef Name="KategoriID" />
+          </Key>
+          <Property Name="KategoriID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="KategoriAdi" Type="nvarchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Kullanicilar">
+          <Key>
+            <PropertyRef Name="KullaniciID" />
+          </Key>
+          <Property Name="KullaniciID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="KullaniciAdi" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Eposta" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="SifreHash" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="ProfilFotografi" Type="nvarchar" MaxLength="500" />
+          <Property Name="Biyografi" Type="nvarchar" MaxLength="300" />
+          <Property Name="KayitTarihi" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Yorumlar">
+          <Key>
+            <PropertyRef Name="YorumID" />
+          </Key>
+          <Property Name="YorumID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="GonderiID" Type="int" Nullable="false" />
+          <Property Name="KullaniciID" Type="int" Nullable="false" />
+          <Property Name="YorumMetni" Type="nvarchar" MaxLength="1000" Nullable="false" />
+          <Property Name="YorumTarihi" Type="datetime" />
+        </EntityType>
+        <Association Name="FK__Degerlend__Gonde__267ABA7A">
+          <End Role="Gonderiler" Type="Self.Gonderiler" Multiplicity="1" />
+          <End Role="Degerlendirmeler" Type="Self.Degerlendirmeler" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Gonderiler">
+              <PropertyRef Name="GonderiID" />
+            </Principal>
+            <Dependent Role="Degerlendirmeler">
+              <PropertyRef Name="GonderiID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Degerlend__Kulla__276EDEB3">
+          <End Role="Kullanicilar" Type="Self.Kullanicilar" Multiplicity="1" />
+          <End Role="Degerlendirmeler" Type="Self.Degerlendirmeler" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Kullanicilar">
+              <PropertyRef Name="KullaniciID" />
+            </Principal>
+            <Dependent Role="Degerlendirmeler">
+              <PropertyRef Name="KullaniciID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__GonderiHa__Gonde__1FCDBCEB">
+          <End Role="Gonderiler" Type="Self.Gonderiler" Multiplicity="1" />
+          <End Role="GonderiHashtagleri" Type="Self.GonderiHashtagleri" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Gonderiler">
+              <PropertyRef Name="GonderiID" />
+            </Principal>
+            <Dependent Role="GonderiHashtagleri">
+              <PropertyRef Name="GonderiID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__GonderiHa__Hasht__20C1E124">
+          <End Role="Hashtagler" Type="Self.Hashtagler" Multiplicity="1" />
+          <End Role="GonderiHashtagleri" Type="Self.GonderiHashtagleri" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Hashtagler">
+              <PropertyRef Name="HashtagID" />
+            </Principal>
+            <Dependent Role="GonderiHashtagleri">
+              <PropertyRef Name="HashtagID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Gonderile__Kateg__1A14E395">
+          <End Role="Kategoriler" Type="Self.Kategoriler" Multiplicity="0..1" />
+          <End Role="Gonderiler" Type="Self.Gonderiler" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Kategoriler">
+              <PropertyRef Name="KategoriID" />
+            </Principal>
+            <Dependent Role="Gonderiler">
+              <PropertyRef Name="KategoriID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Gonderile__Kulla__1920BF5C">
+          <End Role="Kullanicilar" Type="Self.Kullanicilar" Multiplicity="1" />
+          <End Role="Gonderiler" Type="Self.Gonderiler" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Kullanicilar">
+              <PropertyRef Name="KullaniciID" />
+            </Principal>
+            <Dependent Role="Gonderiler">
+              <PropertyRef Name="KullaniciID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Yorumlar__Gonder__2B3F6F97">
+          <End Role="Gonderiler" Type="Self.Gonderiler" Multiplicity="1" />
+          <End Role="Yorumlar" Type="Self.Yorumlar" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Gonderiler">
+              <PropertyRef Name="GonderiID" />
+            </Principal>
+            <Dependent Role="Yorumlar">
+              <PropertyRef Name="GonderiID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Yorumlar__Kullan__2C3393D0">
+          <End Role="Kullanicilar" Type="Self.Kullanicilar" Multiplicity="1" />
+          <End Role="Yorumlar" Type="Self.Yorumlar" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Kullanicilar">
+              <PropertyRef Name="KullaniciID" />
+            </Principal>
+            <Dependent Role="Yorumlar">
+              <PropertyRef Name="KullaniciID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="YummygramDBModelStoreContainer">
+          <EntitySet Name="Degerlendirmeler" EntityType="Self.Degerlendirmeler" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GonderiHashtagleri" EntityType="Self.GonderiHashtagleri" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Gonderiler" EntityType="Self.Gonderiler" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Hashtagler" EntityType="Self.Hashtagler" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Kategoriler" EntityType="Self.Kategoriler" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Kullanicilar" EntityType="Self.Kullanicilar" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Yorumlar" EntityType="Self.Yorumlar" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__Degerlend__Gonde__267ABA7A" Association="Self.FK__Degerlend__Gonde__267ABA7A">
+            <End Role="Gonderiler" EntitySet="Gonderiler" />
+            <End Role="Degerlendirmeler" EntitySet="Degerlendirmeler" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Degerlend__Kulla__276EDEB3" Association="Self.FK__Degerlend__Kulla__276EDEB3">
+            <End Role="Kullanicilar" EntitySet="Kullanicilar" />
+            <End Role="Degerlendirmeler" EntitySet="Degerlendirmeler" />
+          </AssociationSet>
+          <AssociationSet Name="FK__GonderiHa__Gonde__1FCDBCEB" Association="Self.FK__GonderiHa__Gonde__1FCDBCEB">
+            <End Role="Gonderiler" EntitySet="Gonderiler" />
+            <End Role="GonderiHashtagleri" EntitySet="GonderiHashtagleri" />
+          </AssociationSet>
+          <AssociationSet Name="FK__GonderiHa__Hasht__20C1E124" Association="Self.FK__GonderiHa__Hasht__20C1E124">
+            <End Role="Hashtagler" EntitySet="Hashtagler" />
+            <End Role="GonderiHashtagleri" EntitySet="GonderiHashtagleri" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Gonderile__Kateg__1A14E395" Association="Self.FK__Gonderile__Kateg__1A14E395">
+            <End Role="Kategoriler" EntitySet="Kategoriler" />
+            <End Role="Gonderiler" EntitySet="Gonderiler" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Gonderile__Kulla__1920BF5C" Association="Self.FK__Gonderile__Kulla__1920BF5C">
+            <End Role="Kullanicilar" EntitySet="Kullanicilar" />
+            <End Role="Gonderiler" EntitySet="Gonderiler" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Yorumlar__Gonder__2B3F6F97" Association="Self.FK__Yorumlar__Gonder__2B3F6F97">
+            <End Role="Gonderiler" EntitySet="Gonderiler" />
+            <End Role="Yorumlar" EntitySet="Yorumlar" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Yorumlar__Kullan__2C3393D0" Association="Self.FK__Yorumlar__Kullan__2C3393D0">
+            <End Role="Kullanicilar" EntitySet="Kullanicilar" />
+            <End Role="Yorumlar" EntitySet="Yorumlar" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="YummygramDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Degerlendirmeler">
+          <Key>
+            <PropertyRef Name="DegerlendirmeID" />
+          </Key>
+          <Property Name="DegerlendirmeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="GonderiID" Type="Int32" Nullable="false" />
+          <Property Name="KullaniciID" Type="Int32" Nullable="false" />
+          <Property Name="YildizSayisi" Type="Int32" Nullable="false" />
+          <Property Name="DegerlendirmeTarihi" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Gonderiler" Relationship="Self.FK__Degerlend__Gonde__267ABA7A" FromRole="Degerlendirmeler" ToRole="Gonderiler" />
+          <NavigationProperty Name="Kullanicilar" Relationship="Self.FK__Degerlend__Kulla__276EDEB3" FromRole="Degerlendirmeler" ToRole="Kullanicilar" />
+        </EntityType>
+        <EntityType Name="Gonderiler">
+          <Key>
+            <PropertyRef Name="GonderiID" />
+          </Key>
+          <Property Name="GonderiID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="KullaniciID" Type="Int32" Nullable="false" />
+          <Property Name="KategoriID" Type="Int32" />
+          <Property Name="Baslik" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Tarif" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FotografYolu" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PaylasimTarihi" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Degerlendirmeler" Relationship="Self.FK__Degerlend__Gonde__267ABA7A" FromRole="Gonderiler" ToRole="Degerlendirmeler" />
+          <NavigationProperty Name="Kategoriler" Relationship="Self.FK__Gonderile__Kateg__1A14E395" FromRole="Gonderiler" ToRole="Kategoriler" />
+          <NavigationProperty Name="Kullanicilar" Relationship="Self.FK__Gonderile__Kulla__1920BF5C" FromRole="Gonderiler" ToRole="Kullanicilar" />
+          <NavigationProperty Name="Yorumlar" Relationship="Self.FK__Yorumlar__Gonder__2B3F6F97" FromRole="Gonderiler" ToRole="Yorumlar" />
+          <NavigationProperty Name="Hashtagler" Relationship="Self.GonderiHashtagleri" FromRole="Gonderiler" ToRole="Hashtagler" />
+        </EntityType>
+        <EntityType Name="Hashtagler">
+          <Key>
+            <PropertyRef Name="HashtagID" />
+          </Key>
+          <Property Name="HashtagID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EtiketAdi" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Gonderiler" Relationship="Self.GonderiHashtagleri" FromRole="Hashtagler" ToRole="Gonderiler" />
+        </EntityType>
+        <EntityType Name="Kategoriler">
+          <Key>
+            <PropertyRef Name="KategoriID" />
+          </Key>
+          <Property Name="KategoriID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="KategoriAdi" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Gonderiler" Relationship="Self.FK__Gonderile__Kateg__1A14E395" FromRole="Kategoriler" ToRole="Gonderiler" />
+        </EntityType>
+        <EntityType Name="Kullanicilar">
+          <Key>
+            <PropertyRef Name="KullaniciID" />
+          </Key>
+          <Property Name="KullaniciID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="KullaniciAdi" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Eposta" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="SifreHash" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ProfilFotografi" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Biyografi" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="KayitTarihi" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Degerlendirmeler" Relationship="Self.FK__Degerlend__Kulla__276EDEB3" FromRole="Kullanicilar" ToRole="Degerlendirmeler" />
+          <NavigationProperty Name="Gonderiler" Relationship="Self.FK__Gonderile__Kulla__1920BF5C" FromRole="Kullanicilar" ToRole="Gonderiler" />
+          <NavigationProperty Name="Yorumlar" Relationship="Self.FK__Yorumlar__Kullan__2C3393D0" FromRole="Kullanicilar" ToRole="Yorumlar" />
+        </EntityType>
+        <EntityType Name="Yorumlar">
+          <Key>
+            <PropertyRef Name="YorumID" />
+          </Key>
+          <Property Name="YorumID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="GonderiID" Type="Int32" Nullable="false" />
+          <Property Name="KullaniciID" Type="Int32" Nullable="false" />
+          <Property Name="YorumMetni" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="YorumTarihi" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Gonderiler" Relationship="Self.FK__Yorumlar__Gonder__2B3F6F97" FromRole="Yorumlar" ToRole="Gonderiler" />
+          <NavigationProperty Name="Kullanicilar" Relationship="Self.FK__Yorumlar__Kullan__2C3393D0" FromRole="Yorumlar" ToRole="Kullanicilar" />
+        </EntityType>
+        <Association Name="FK__Degerlend__Gonde__267ABA7A">
+          <End Role="Gonderiler" Type="Self.Gonderiler" Multiplicity="1" />
+          <End Role="Degerlendirmeler" Type="Self.Degerlendirmeler" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Gonderiler">
+              <PropertyRef Name="GonderiID" />
+            </Principal>
+            <Dependent Role="Degerlendirmeler">
+              <PropertyRef Name="GonderiID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Degerlend__Kulla__276EDEB3">
+          <End Role="Kullanicilar" Type="Self.Kullanicilar" Multiplicity="1" />
+          <End Role="Degerlendirmeler" Type="Self.Degerlendirmeler" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Kullanicilar">
+              <PropertyRef Name="KullaniciID" />
+            </Principal>
+            <Dependent Role="Degerlendirmeler">
+              <PropertyRef Name="KullaniciID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Gonderile__Kateg__1A14E395">
+          <End Role="Kategoriler" Type="Self.Kategoriler" Multiplicity="0..1" />
+          <End Role="Gonderiler" Type="Self.Gonderiler" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Kategoriler">
+              <PropertyRef Name="KategoriID" />
+            </Principal>
+            <Dependent Role="Gonderiler">
+              <PropertyRef Name="KategoriID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Gonderile__Kulla__1920BF5C">
+          <End Role="Kullanicilar" Type="Self.Kullanicilar" Multiplicity="1" />
+          <End Role="Gonderiler" Type="Self.Gonderiler" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Kullanicilar">
+              <PropertyRef Name="KullaniciID" />
+            </Principal>
+            <Dependent Role="Gonderiler">
+              <PropertyRef Name="KullaniciID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Yorumlar__Gonder__2B3F6F97">
+          <End Role="Gonderiler" Type="Self.Gonderiler" Multiplicity="1" />
+          <End Role="Yorumlar" Type="Self.Yorumlar" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Gonderiler">
+              <PropertyRef Name="GonderiID" />
+            </Principal>
+            <Dependent Role="Yorumlar">
+              <PropertyRef Name="GonderiID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Yorumlar__Kullan__2C3393D0">
+          <End Role="Kullanicilar" Type="Self.Kullanicilar" Multiplicity="1" />
+          <End Role="Yorumlar" Type="Self.Yorumlar" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Kullanicilar">
+              <PropertyRef Name="KullaniciID" />
+            </Principal>
+            <Dependent Role="Yorumlar">
+              <PropertyRef Name="KullaniciID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="GonderiHashtagleri">
+          <End Role="Gonderiler" Type="Self.Gonderiler" Multiplicity="*" />
+          <End Role="Hashtagler" Type="Self.Hashtagler" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="YummygramDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Degerlendirmeler" EntityType="Self.Degerlendirmeler" />
+          <EntitySet Name="Gonderiler" EntityType="Self.Gonderiler" />
+          <EntitySet Name="Hashtagler" EntityType="Self.Hashtagler" />
+          <EntitySet Name="Kategoriler" EntityType="Self.Kategoriler" />
+          <EntitySet Name="Kullanicilar" EntityType="Self.Kullanicilar" />
+          <EntitySet Name="Yorumlar" EntityType="Self.Yorumlar" />
+          <AssociationSet Name="FK__Degerlend__Gonde__267ABA7A" Association="Self.FK__Degerlend__Gonde__267ABA7A">
+            <End Role="Gonderiler" EntitySet="Gonderiler" />
+            <End Role="Degerlendirmeler" EntitySet="Degerlendirmeler" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Degerlend__Kulla__276EDEB3" Association="Self.FK__Degerlend__Kulla__276EDEB3">
+            <End Role="Kullanicilar" EntitySet="Kullanicilar" />
+            <End Role="Degerlendirmeler" EntitySet="Degerlendirmeler" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Gonderile__Kateg__1A14E395" Association="Self.FK__Gonderile__Kateg__1A14E395">
+            <End Role="Kategoriler" EntitySet="Kategoriler" />
+            <End Role="Gonderiler" EntitySet="Gonderiler" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Gonderile__Kulla__1920BF5C" Association="Self.FK__Gonderile__Kulla__1920BF5C">
+            <End Role="Kullanicilar" EntitySet="Kullanicilar" />
+            <End Role="Gonderiler" EntitySet="Gonderiler" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Yorumlar__Gonder__2B3F6F97" Association="Self.FK__Yorumlar__Gonder__2B3F6F97">
+            <End Role="Gonderiler" EntitySet="Gonderiler" />
+            <End Role="Yorumlar" EntitySet="Yorumlar" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Yorumlar__Kullan__2C3393D0" Association="Self.FK__Yorumlar__Kullan__2C3393D0">
+            <End Role="Kullanicilar" EntitySet="Kullanicilar" />
+            <End Role="Yorumlar" EntitySet="Yorumlar" />
+          </AssociationSet>
+          <AssociationSet Name="GonderiHashtagleri" Association="Self.GonderiHashtagleri">
+            <End Role="Gonderiler" EntitySet="Gonderiler" />
+            <End Role="Hashtagler" EntitySet="Hashtagler" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="YummygramDBModelStoreContainer" CdmEntityContainer="YummygramDBEntities">
+          <EntitySetMapping Name="Degerlendirmeler">
+            <EntityTypeMapping TypeName="YummygramDBModel.Degerlendirmeler">
+              <MappingFragment StoreEntitySet="Degerlendirmeler">
+                <ScalarProperty Name="DegerlendirmeID" ColumnName="DegerlendirmeID" />
+                <ScalarProperty Name="GonderiID" ColumnName="GonderiID" />
+                <ScalarProperty Name="KullaniciID" ColumnName="KullaniciID" />
+                <ScalarProperty Name="YildizSayisi" ColumnName="YildizSayisi" />
+                <ScalarProperty Name="DegerlendirmeTarihi" ColumnName="DegerlendirmeTarihi" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Gonderiler">
+            <EntityTypeMapping TypeName="YummygramDBModel.Gonderiler">
+              <MappingFragment StoreEntitySet="Gonderiler">
+                <ScalarProperty Name="GonderiID" ColumnName="GonderiID" />
+                <ScalarProperty Name="KullaniciID" ColumnName="KullaniciID" />
+                <ScalarProperty Name="KategoriID" ColumnName="KategoriID" />
+                <ScalarProperty Name="Baslik" ColumnName="Baslik" />
+                <ScalarProperty Name="Tarif" ColumnName="Tarif" />
+                <ScalarProperty Name="FotografYolu" ColumnName="FotografYolu" />
+                <ScalarProperty Name="PaylasimTarihi" ColumnName="PaylasimTarihi" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Hashtagler">
+            <EntityTypeMapping TypeName="YummygramDBModel.Hashtagler">
+              <MappingFragment StoreEntitySet="Hashtagler">
+                <ScalarProperty Name="HashtagID" ColumnName="HashtagID" />
+                <ScalarProperty Name="EtiketAdi" ColumnName="EtiketAdi" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Kategoriler">
+            <EntityTypeMapping TypeName="YummygramDBModel.Kategoriler">
+              <MappingFragment StoreEntitySet="Kategoriler">
+                <ScalarProperty Name="KategoriID" ColumnName="KategoriID" />
+                <ScalarProperty Name="KategoriAdi" ColumnName="KategoriAdi" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Kullanicilar">
+            <EntityTypeMapping TypeName="YummygramDBModel.Kullanicilar">
+              <MappingFragment StoreEntitySet="Kullanicilar">
+                <ScalarProperty Name="KullaniciID" ColumnName="KullaniciID" />
+                <ScalarProperty Name="KullaniciAdi" ColumnName="KullaniciAdi" />
+                <ScalarProperty Name="Eposta" ColumnName="Eposta" />
+                <ScalarProperty Name="SifreHash" ColumnName="SifreHash" />
+                <ScalarProperty Name="ProfilFotografi" ColumnName="ProfilFotografi" />
+                <ScalarProperty Name="Biyografi" ColumnName="Biyografi" />
+                <ScalarProperty Name="KayitTarihi" ColumnName="KayitTarihi" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Yorumlar">
+            <EntityTypeMapping TypeName="YummygramDBModel.Yorumlar">
+              <MappingFragment StoreEntitySet="Yorumlar">
+                <ScalarProperty Name="YorumID" ColumnName="YorumID" />
+                <ScalarProperty Name="GonderiID" ColumnName="GonderiID" />
+                <ScalarProperty Name="KullaniciID" ColumnName="KullaniciID" />
+                <ScalarProperty Name="YorumMetni" ColumnName="YorumMetni" />
+                <ScalarProperty Name="YorumTarihi" ColumnName="YorumTarihi" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="GonderiHashtagleri" TypeName="YummygramDBModel.GonderiHashtagleri" StoreEntitySet="GonderiHashtagleri">
+            <EndProperty Name="Gonderiler">
+              <ScalarProperty Name="GonderiID" ColumnName="GonderiID" />
+            </EndProperty>
+            <EndProperty Name="Hashtagler">
+              <ScalarProperty Name="HashtagID" ColumnName="HashtagID" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

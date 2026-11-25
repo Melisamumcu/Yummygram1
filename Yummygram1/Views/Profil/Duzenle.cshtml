@@ -1,0 +1,132 @@
+﻿@model Yummygram1.Kullanicilar
+
+@{
+    ViewBag.Title = "Profili Düzenle";
+}
+
+<style>
+    body {
+        background: #fff8f5;
+    }
+
+    .edit-container {
+        max-width: 550px;
+        margin: 45px auto;
+        padding: 30px;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 5px 25px rgba(0,0,0,0.08);
+    }
+
+    .edit-title {
+        color: #722f37;
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
+    .form-control {
+        border-radius: 10px;
+        padding: 12px;
+        margin-bottom: 18px;
+    }
+
+    .btn-save {
+        background: #722f37;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        padding: 12px;
+        width: 100%;
+    }
+
+        .btn-save:hover {
+            background: #542129;
+            color: white;
+        }
+
+    .profile-photo {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        display: block;
+        margin: 15px auto;
+        border: 3px solid #722f37;
+    }
+</style>
+
+<div class="edit-container">
+
+    <h2 class="edit-title">Profili Düzenle</h2>
+
+    <div style="text-align:center;">
+        @if (!string.IsNullOrEmpty(Model.ProfilFotografi))
+        {
+            <img src="@Url.Content(Model.ProfilFotografi)" class="profile-photo" />
+        }
+        else
+        {
+            <div class="profile-photo"
+                 style="background:#f0dfe0; display:flex; align-items:center; justify-content:center;">
+                <span style="font-size:45px;">👤</span>
+            </div>
+        }
+    </div>
+
+    <h4>Profil Fotoğrafı</h4>
+
+    @using (Html.BeginForm("FotografYukle", "Profil",
+        FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <input type="file"
+               name="fotograf"
+               class="form-control"
+               accept=".jpg,.jpeg,.png"
+               required />
+
+        <small>JPG, JPEG veya PNG • En fazla 5 MB</small>
+
+        <button type="submit" class="btn-save" style="margin-top:15px;">
+            Fotoğrafı Yükle
+        </button>
+    }
+
+    <hr />
+
+    <h4>Hesap Bilgileri</h4>
+
+    <label>Kullanıcı Adı</label>
+    <input type="text" class="form-control"
+           value="@Model.KullaniciAdi" readonly />
+
+    <label>E-posta</label>
+    <input type="email" class="form-control"
+           value="@Model.Eposta" readonly />
+
+    <hr />
+
+    <h4>Biyografi</h4>
+
+    @using (Html.BeginForm("Duzenle", "Profil", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        <textarea name="biyografi"
+                  class="form-control"
+                  rows="4"
+                  maxlength="300"
+                  placeholder="Kendinden biraz bahset...">@Model.Biyografi</textarea>
+
+        <button type="submit" class="btn-save">
+            Değişiklikleri Kaydet
+        </button>
+    }
+
+    <a href="@Url.Action("Index", "Profil")"
+       style="display:block;text-align:center;margin-top:20px;color:#722f37;">
+        Profile Geri Dön
+    </a>
+
+</div>

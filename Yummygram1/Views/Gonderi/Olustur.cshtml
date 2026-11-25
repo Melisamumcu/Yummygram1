@@ -1,0 +1,106 @@
+﻿@{
+    ViewBag.Title = "Yeni Gönderi";
+}
+
+<style>
+    body {
+        background: #fff8f5;
+    }
+
+    .post-container {
+        max-width: 650px;
+        margin: 40px auto;
+        padding: 35px;
+        background: white;
+        border-radius: 22px;
+        box-shadow: 0 5px 25px rgba(0,0,0,.08);
+    }
+
+    .post-title {
+        text-align: center;
+        color: #722f37;
+        margin-bottom: 25px;
+        font-weight: bold;
+    }
+
+    .post-input {
+        width: 100%;
+        padding: 13px;
+        margin: 8px 0 20px;
+        border: 1px solid #ead9d9;
+        border-radius: 10px;
+    }
+
+    .post-button {
+        width: 100%;
+        padding: 14px;
+        background: #722f37;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-weight: bold;
+    }
+
+        .post-button:hover {
+            background: #542129;
+        }
+
+    .post-container label {
+        color: #542129;
+        font-weight: 600;
+    }
+</style>
+
+<div class="post-container">
+
+    <h2 class="post-title"> Yeni Yemek Gönderisi</h2>
+
+    @if (ViewBag.Hata != null)
+    {
+        <div class="alert alert-danger">@ViewBag.Hata</div>
+    }
+
+    @using (Html.BeginForm("Olustur", "Gonderi",
+        FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <label>Yemeğin adı</label>
+        <input type="text" name="baslik"
+               class="post-input"
+               placeholder="Örn: Çilekli cheesecake"
+               maxlength="150" required />
+
+        <label>Tarif</label>
+        <textarea name="tarif"
+                  class="post-input"
+                  rows="6"
+                  placeholder="Malzemeleri ve yapılışını anlat..."
+                  required></textarea>
+
+        <label>Kategori</label>
+        @Html.DropDownList(
+            "kategoriID",
+            (SelectList)ViewBag.Kategoriler,
+            "Kategori seç",
+            new { @class = "post-input", required = "required" }
+        )
+
+        <label>Yemek fotoğrafı</label>
+        <input type="file"
+               name="fotograf"
+               class="post-input"
+               accept=".jpg,.jpeg,.png"
+               required />
+
+        <button type="submit" class="post-button">
+            Gönderiyi Paylaş 
+        </button>
+    }
+
+    <a href="@Url.Action("Index", "Profil")"
+       style="display:block;text-align:center;margin-top:20px;color:#722f37;">
+        Profilime dön
+    </a>
+
+</div>

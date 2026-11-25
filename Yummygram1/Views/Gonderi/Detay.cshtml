@@ -1,0 +1,215 @@
+﻿@model Yummygram1.Gonderiler
+@using System.Linq
+@using System.Collections.Generic
+
+@{
+    ViewBag.Title = "Gönderi Detayı";
+
+    var degerlendirmeler =
+        ViewBag.Degerlendirmeler as IEnumerable<Yummygram1.Degerlendirmeler>;
+
+    var yorumlar = Model.Yorumlar
+        .OrderByDescending(x => x.YorumTarihi)
+        .ToList();
+}
+
+<style>
+    body {
+        background: #fff8f5;
+    }
+
+    .detail-container {
+        max-width: 750px;
+        margin: 35px auto;
+        padding: 25px;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 5px 20px rgba(0,0,0,.07);
+    }
+
+    .detail-title {
+        color: #722f37;
+        font-weight: bold;
+    }
+
+    .food-photo {
+        width: 100%;
+        max-height: 450px;
+        object-fit: cover;
+        border-radius: 15px;
+        margin: 15px 0;
+    }
+
+    .rating-box, .comment-box {
+        background: #fff5f0;
+        padding: 20px;
+        border-radius: 15px;
+        margin-top: 25px;
+    }
+
+    .rating-button, .comment-button {
+        background: #722f37;
+        color: white;
+        border: none;
+        padding: 12px 22px;
+        border-radius: 10px;
+        margin-top: 12px;
+    }
+
+    .review {
+        padding: 15px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .stars {
+        color: #e5a000;
+        font-size: 22px;
+    }
+
+    .comment {
+        background: #fff8f5;
+        padding: 15px;
+        border-radius: 12px;
+        margin: 12px 0;
+    }
+</style>
+
+<div class="detail-container">
+
+    <h2 class="detail-title">@Model.Baslik</h2>
+
+    @if (!string.IsNullOrEmpty(Model.FotografYolu))
+    {
+        <img src="@Url.Content(Model.FotografYolu)" class="food-photo" />
+    }
+
+    <h4 style="color:#722f37;">Tarif</h4>
+
+    <p style="white-space:pre-wrap;">@Model.Tarif</p>
+
+    <small style="color:#888;">Paylaşım tarihi: @Model.PaylasimTarihi</small>
+
+    <div class="rating-box">
+
+        <h3 style="color:#722f37;">⭐ Yemek Değerlendirmesi</h3>
+
+        <h2 class="stars">@String.Format("{0:0.0}", ViewBag.Ortalama) / 5</h2>
+
+        <p>@ViewBag.DegerlendirmeSayisi değerlendirme</p>
+
+        @if (Session["KullaniciID"] != null)
+        {
+            using (Html.BeginForm("Ekle", "Degerlendirme", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+
+                <input type="hidden" name="gonderiID" value="@Model.GonderiID" />
+
+                <label>Bu yemeğe kaç yıldız veriyorsun?</label>
+
+                <select name="yildizSayisi" class="form-control" required>
+                    <option value="5">⭐⭐⭐⭐⭐ - Harika</option>
+                    <option value="4">⭐⭐⭐⭐ - Çok güzel</option>
+                    <option value="3">⭐⭐⭐ - İyi</option>
+                    <option value="2">⭐⭐ - Geliştirilebilir</option>
+                    <option value="1">⭐ - Beğenmedim</option>
+                </select>
+
+                <button type="submit" class="rating-button">
+                    Değerlendirmeyi Gönder
+                </button>
+            }
+        }
+        else
+        {
+            <p>Değerlendirme yapmak için giriş yapmalısın.</p>
+        }
+
+    </div>
+
+    <div class="comment-box">
+
+        <h3 style="color:#722f37;">💬 Yorum Yap</h3>
+
+        @if (Session["KullaniciID"] != null)
+        {
+            using (Html.BeginForm("Ekle", "Yorum", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+
+                <input type="hidden" name="gonderiID" value="@Model.GonderiID" />
+
+                <textarea name="yorumMetni"
+                          class="form-control"
+                          rows="4"
+                          maxlength="1000"
+                          placeholder="Bu yemek hakkında ne düşünüyorsun?"
+                          required></textarea>
+
+                <button type="submit" class="comment-button">
+                    Yorumu Paylaş
+                </button>
+            }
+        }
+        else
+        {
+            <p>Yorum yapmak için giriş yapmalısın.</p>
+        }
+
+    </div>
+
+    <h3 style="color:#722f37;margin-top:30px;"> Kullanıcı Yorumları</h3>
+
+    @if (yorumlar.Any())
+    {
+        foreach (var yorum in yorumlar)
+        {
+            <div class="comment">
+
+                <strong>@yorum.Kullanicilar.KullaniciAdi</strong>
+
+                <p style="margin-top:8px;">@yorum.YorumMetni</p>
+
+                <small style="color:#888;">@yorum.YorumTarihi</small>
+
+            </div>
+        }
+    }
+    else
+    {
+        <p>Henüz yorum yapılmamış. İlk yorumu sen yaz! </p>
+    }
+
+    <h3 style="color:#722f37;margin-top:30px;">⭐ Kullanıcı Değerlendirmeleri</h3>
+
+    @if (degerlendirmeler != null && degerlendirmeler.Any())
+    {
+        foreach (var d in degerlendirmeler)
+        {
+            <div class="review">
+
+                <strong>@d.Kullanicilar.KullaniciAdi</strong>
+
+                <div class="stars">
+                    @for (int i = 0; i < d.YildizSayisi; i++)
+                    {
+                        @:★
+                    }
+                </div>
+
+                <small style="color:#888;">@d.DegerlendirmeTarihi</small>
+
+            </div>
+        }
+    }
+    else
+    {
+        <p>Henüz değerlendirme yapılmamış.</p>
+    }
+
+    <a href="@Url.Action("Index", "Profil")"
+       style="display:block;margin-top:25px;color:#722f37;">
+        ← Profilime dön
+    </a>
+
+</div>

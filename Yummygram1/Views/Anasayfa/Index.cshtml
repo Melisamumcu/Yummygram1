@@ -1,0 +1,210 @@
+﻿@model IEnumerable<Yummygram1.Gonderiler>
+@using System.Linq
+
+@{
+    ViewBag.Title = "Keşfet";
+    var ortalamalar = ViewBag.OrtalamaPuanlar as System.Collections.Generic.Dictionary<int, double>;
+    var yorumSayilari = ViewBag.YorumSayilari as System.Collections.Generic.Dictionary<int, int>;
+}
+
+<style>
+    body {
+        background: #fff8f5;
+    }
+
+    .explore-container {
+        max-width: 1150px;
+        margin: 35px auto;
+        padding: 20px;
+    }
+
+    .hero {
+        background: linear-gradient(120deg, #722f37, #b66b76);
+        color: white;
+        padding: 45px 35px;
+        border-radius: 25px;
+        margin-bottom: 35px;
+    }
+
+        .hero h1 {
+            font-size: 38px;
+            font-weight: bold;
+        }
+
+        .hero p {
+            font-size: 17px;
+            opacity: .9;
+        }
+
+    .section-title {
+        color: #722f37;
+        font-weight: bold;
+        margin-bottom: 25px;
+    }
+
+    .food-card {
+        background: white;
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 5px 18px rgba(0,0,0,.06);
+        margin-bottom: 28px;
+        transition: .2s;
+    }
+
+        .food-card:hover {
+            transform: translateY(-5px);
+        }
+
+    .food-image {
+        width: 100%;
+        height: 240px;
+        object-fit: cover;
+    }
+
+    .food-content {
+        padding: 20px;
+    }
+
+    .food-title {
+        color: #722f37;
+        font-weight: bold;
+        font-size: 21px;
+    }
+
+    .food-user {
+        color: #999;
+        font-size: 14px;
+    }
+
+    .food-description {
+        color: #666;
+        margin-top: 12px;
+        min-height: 45px;
+    }
+
+    .food-rating {
+        color: #e5a000;
+        font-weight: bold;
+        margin: 12px 0;
+    }
+
+    .detail-button {
+        display: inline-block;
+        background: #722f37;
+        color: white;
+        padding: 11px 20px;
+        border-radius: 10px;
+        text-decoration: none;
+        margin-top: 10px;
+    }
+
+        .detail-button:hover {
+            background: #542129;
+            color: white;
+            text-decoration: none;
+        }
+
+    .empty-area {
+        background: white;
+        padding: 50px;
+        text-align: center;
+        border-radius: 20px;
+        color: #777;
+    }
+</style>
+
+<div class="explore-container">
+
+    <div class="hero">
+        <h1>Yummygram </h1>
+        <p>Lezzetli tarifleri keşfet, kendi tariflerini paylaş!</p>
+        <a href="@Url.Action("Olustur", "Gonderi")"
+           class="detail-button"
+           style="background:white;color:#722f37;">
+            + Tarifini Paylaş
+        </a>
+    </div>
+
+    <h2 class="section-title"> Keşfet</h2>
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="row">
+
+            @foreach (var gonderi in Model)
+            {
+                <div class="col-md-4">
+
+                    <div class="food-card">
+
+                        @if (!string.IsNullOrEmpty(gonderi.FotografYolu))
+                        {
+                            <img src="@Url.Content(gonderi.FotografYolu)"
+                                 class="food-image" />
+                        }
+                        else
+                        {
+                            <div class="food-image"
+                                 style="background:#f0dfe0;display:flex;align-items:center;justify-content:center;font-size:60px;">
+                                
+                            </div>
+                        }
+
+                        <div class="food-content">
+
+                            <h3 class="food-title">@gonderi.Baslik</h3>
+
+                            <p class="food-user">
+                                 @@gonderi.Kullanicilar.KullaniciAdi
+                            </p>
+
+                            <p class="food-description">
+                                @(gonderi.Tarif != null && gonderi.Tarif.Length > 100
+                                    ? gonderi.Tarif.Substring(0, 100) + "..."
+                                    : gonderi.Tarif)
+                            </p>
+
+                            <div class="food-rating">
+                                
+                                @(ortalamalar != null && ortalamalar.ContainsKey(gonderi.GonderiID)
+                                    ? ortalamalar[gonderi.GonderiID].ToString("0.0")
+                                    : "0.0")
+                                / 5
+                            </div>
+
+                            <small style="color:#999;">
+                                💬
+                                @(yorumSayilari != null && yorumSayilari.ContainsKey(gonderi.GonderiID)
+                                    ? yorumSayilari[gonderi.GonderiID]
+                                    : 0)
+                                yorum
+                            </small>
+
+                            <br />
+
+                            <a href="@Url.Action("Detay", "Gonderi", new { id = gonderi.GonderiID })"
+                               class="detail-button">
+                                Tarifi İncele →
+                            </a>
+
+                        </div>
+                    </div>
+
+                </div>
+            }
+
+        </div>
+    }
+    else
+    {
+        <div class="empty-area">
+            <h2> Henüz tarif yok!</h2>
+            <p>İlk tarifi sen paylaş ve Yummygram'ı başlat.</p>
+            <a href="@Url.Action("Olustur", "Gonderi")"
+               class="detail-button">
+                Tarif Paylaş
+            </a>
+        </div>
+    }
+
+</div>

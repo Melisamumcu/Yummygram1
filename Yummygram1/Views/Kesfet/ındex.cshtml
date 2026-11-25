@@ -1,0 +1,161 @@
+﻿@model IEnumerable<Yummygram1.Gonderiler>
+
+@{
+    ViewBag.Title = "Keşfet";
+}
+
+<style>
+    body {
+        background: #f8f5f1;
+    }
+
+    .kesfet-container {
+        max-width: 1100px;
+        margin: 35px auto;
+    }
+
+    .kesfet-baslik {
+        text-align: center;
+        margin-bottom: 35px;
+    }
+
+        .kesfet-baslik h1 {
+            color: #e87545;
+            font-size: 38px;
+            font-weight: bold;
+        }
+
+        .kesfet-baslik p {
+            color: #777;
+        }
+
+    .gonderi-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+        gap: 25px;
+    }
+
+    .gonderi-kart {
+        background: white;
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,.07);
+        transition: .25s;
+    }
+
+        .gonderi-kart:hover {
+            transform: translateY(-5px);
+        }
+
+        .gonderi-kart img {
+            width: 100%;
+            height: 210px;
+            object-fit: cover;
+        }
+
+    .gonderi-icerik {
+        padding: 18px;
+    }
+
+        .gonderi-icerik h3 {
+            color: #333;
+            font-size: 21px;
+            font-weight: bold;
+        }
+
+    .kullanici {
+        color: #e87545;
+        font-size: 14px;
+    }
+
+    .tarif {
+        color: #777;
+        font-size: 14px;
+        margin-top: 10px;
+    }
+
+    .detay-btn {
+        display: block;
+        background: #e87545;
+        color: white;
+        text-align: center;
+        padding: 11px;
+        border-radius: 10px;
+        text-decoration: none;
+        margin-top: 15px;
+    }
+
+        .detay-btn:hover {
+            background: #cf6035;
+            color: white;
+            text-decoration: none;
+        }
+
+    .bos {
+        text-align: center;
+        padding: 50px;
+        color: #777;
+        background: white;
+        border-radius: 15px;
+    }
+</style>
+
+<div class="kesfet-container">
+
+    <div class="kesfet-baslik">
+        <h1>🍽️ Keşfet</h1>
+        <p>Birbirinden güzel tarifleri keşfet, ilhamını paylaş!</p>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="gonderi-grid">
+
+            @foreach (var gonderi in Model)
+            {
+                <div class="gonderi-kart">
+
+                    @if (!string.IsNullOrEmpty(gonderi.FotografYolu))
+                    {
+                        <img src="@Url.Content(gonderi.FotografYolu)" alt="@gonderi.Baslik" />
+                    }
+
+                    <div class="gonderi-icerik">
+
+                        <h3>@gonderi.Baslik</h3>
+
+                        <div class="kullanici">
+                             @gonderi.Kullanicilar.KullaniciAdi
+                        </div>
+
+                        <p class="tarif">
+                            @(gonderi.Tarif.Length > 100
+                                ? gonderi.Tarif.Substring(0, 100) + "..."
+                                : gonderi.Tarif)
+                        </p>
+
+                        <a href="@Url.Action("Detay", "Gonderi", new { id = gonderi.GonderiID })"
+                           class="detay-btn">
+                            Tarifi İncele 
+                        </a>
+
+                    </div>
+                </div>
+            }
+
+        </div>
+    }
+    else
+    {
+        <div class="bos">
+            <h3>Henüz tarif paylaşılmamış </h3>
+            <p>İlk tarifi sen paylaşabilirsin!</p>
+
+            <a href="@Url.Action("Olustur", "Gonderi")"
+               class="detay-btn">
+                Tarif Paylaş
+            </a>
+        </div>
+    }
+
+</div>

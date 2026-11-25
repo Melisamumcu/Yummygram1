@@ -1,0 +1,186 @@
+﻿@model Yummygram1.Kullanicilar
+
+@{
+    ViewBag.Title = "Profilim";
+}
+
+<style>
+    body {
+        background: #fff8f5;
+    }
+
+    .profile-container {
+        max-width: 900px;
+        margin: 35px auto;
+        padding: 25px;
+    }
+
+    .profile-header {
+        background: white;
+        padding: 30px;
+        border-radius: 20px;
+        box-shadow: 0 5px 20px rgba(0,0,0,.06);
+        text-align: center;
+    }
+
+    .profile-photo {
+        width: 130px;
+        height: 130px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid #722f37;
+    }
+
+    .profile-name {
+        color: #722f37;
+        margin-top: 15px;
+        font-weight: bold;
+    }
+
+    .stats {
+        display: flex;
+        justify-content: center;
+        gap: 35px;
+        margin: 20px 0;
+    }
+
+    .stat strong {
+        display: block;
+        color: #722f37;
+        font-size: 22px;
+    }
+
+    .profile-button {
+        display: inline-block;
+        background: #722f37;
+        color: white;
+        padding: 11px 20px;
+        border-radius: 10px;
+        text-decoration: none;
+        margin: 5px;
+    }
+
+        .profile-button:hover {
+            background: #542129;
+            color: white;
+            text-decoration: none;
+        }
+
+    .posts-title {
+        color: #722f37;
+        margin: 30px 0 20px;
+        font-weight: bold;
+    }
+
+    .post-card {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 15px rgba(0,0,0,.06);
+    }
+
+        .post-card img {
+            width: 100%;
+            max-height: 420px;
+            object-fit: cover;
+        }
+
+    .post-content {
+        padding: 20px;
+    }
+
+    .empty-posts {
+        text-align: center;
+        background: white;
+        padding: 35px;
+        border-radius: 15px;
+        color: #777;
+    }
+</style>
+
+<div class="profile-container">
+
+    <div class="profile-header">
+
+        @if (!string.IsNullOrEmpty(Model.ProfilFotografi))
+        {
+            <img src="@Url.Content(Model.ProfilFotografi)" class="profile-photo" />
+        }
+        else
+        {
+            <div class="profile-photo" style="margin:auto;background:#f0dfe0;display:flex;align-items:center;justify-content:center;font-size:50px;">👤</div>
+        }
+
+        <h2 class="profile-name">@@@Model.KullaniciAdi</h2>
+
+        <p>@Model.Biyografi</p>
+
+        <div class="stats">
+            <div class="stat">
+                <strong>@Model.Gonderiler.Count</strong>
+                Gönderi
+            </div>
+
+            <div class="stat">
+                <strong>@Model.Degerlendirmeler.Count</strong>
+                Değerlendirme
+            </div>
+        </div>
+
+        <a href="@Url.Action("Duzenle", "Profil")" class="profile-button">Profili Düzenle</a>
+
+        <a href="@Url.Action("Olustur", "Gonderi")" class="profile-button">+ Gönderi Paylaş</a>
+
+        <a href="@Url.Action("Cikis", "Profil")" class="profile-button">Çıkış Yap</a>
+
+        <p style="margin-top:15px;color:#777;">@Model.Eposta</p>
+
+    </div>
+
+    <h3 class="posts-title">Paylaşımlarım </h3>
+
+    @if (Model.Gonderiler.Any())
+    {
+        foreach (var gonderi in Model.Gonderiler.OrderByDescending(x => x.PaylasimTarihi))
+        {
+            <div class="post-card">
+
+                @if (!string.IsNullOrEmpty(gonderi.FotografYolu))
+                {
+                    <img src="@Url.Content(gonderi.FotografYolu)" />
+                }
+
+                <div class="post-content">
+
+                    <h3 style="color:#722f37;">@gonderi.Baslik</h3>
+
+                    <p style="white-space:pre-wrap;">@gonderi.Tarif</p>
+
+                    <small style="color:#999;">@gonderi.PaylasimTarihi</small>
+
+                    <br />
+
+                    <a href="@Url.Action("Detay", "Gonderi", new { id = gonderi.GonderiID })"
+                       class="profile-button">
+                        ⭐ Detayı Gör ve Puanla
+                    </a>
+
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="empty-posts">
+            <h4>Henüz gönderi paylaşmadın </h4>
+
+            <p>İlk yemek tarifini paylaşmaya ne dersin?</p>
+
+            <a href="@Url.Action("Olustur", "Gonderi")" class="profile-button">
+                İlk Gönderimi Paylaş
+            </a>
+        </div>
+    }
+
+</div>
